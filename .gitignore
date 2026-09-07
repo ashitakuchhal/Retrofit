@@ -1,0 +1,3 @@
+data/raw/*.csv
+data/raw/*.zip
+!data/raw/.gitkeep
