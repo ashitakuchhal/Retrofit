@@ -1,29 +1,52 @@
-# RetrofitIQ
+# ⚡ RetrofitIQ
 
 ### HVAC Retrofit Recommendation & Simulation Engine
 
-RetrofitIQ is a project focused on identifying HVAC inefficiencies and recommending suitable retrofit solutions based on building and HVAC data.
+> **From HVAC data to intelligent retrofit decisions.**
 
-## Current Progress
+RetrofitIQ is a data-driven decision-support system that analyzes HVAC performance, predicts energy consumption, simulates retrofit strategies, and recommends the most suitable intervention based on **energy, cost, CO₂, comfort, feasibility, maintenance, and urgency**.
 
-* Searching and collecting relevant HVAC datasets
-* Cleaning and preprocessing the collected data
-* Exploring important HVAC parameters
-* Researching approaches for HVAC simulation
+**🏆 Round 2 | 🚧 Development in Progress | VIT Chennai**
 
-## Next Steps
+---
 
-* Finalize the dataset
-* Build the HVAC simulation
-* Develop retrofit recommendation logic
-* Create an interactive dashboard
-* Integrate everything into a working prototype
+## 🎯 Objective
 
-## Team
+RetrofitIQ answers:
 
-**Team Prehistoric Humans**
-Vellore Institute of Technology, Chennai
+> **Which HVAC retrofit should this building implement first — and why?**
 
-**Members:** Jaagriti Mandal · Swati Yadav · Ashita Kuchhal · Aneesha Yadav
+### Workflow
 
-> **Status:** Round 2 — Development in Progress 
+**Building → Analyze → Predict → Simulate → Compare → Rank → Recommend**
+
+---
+
+## 📊 Current Status
+
+| Component | Status |
+|---|:---:|
+| Dataset Collection | ✅ Done |
+| Parameter Selection | ✅ Done |
+| Data Cleaning & Processing | ✅ Done |
+| GitHub Setup | ✅ Done |
+| ML Problem Definition | 🔄 In Progress |
+| Baseline ML Model | 🔄 In Progress |
+| Retrofit Simulation | 🔄 In Progress |
+| Impact Calculation | ⏳ Planned |
+| Ranking Engine | ⏳ Planned |
+| React Dashboard | ⏳ Planned |
+| Integration | ⏳ Planned |
+
+---
+
+## 🧠 System Overview
+
+```mermaid
+flowchart LR
+    A["🏢 HVAC Data"] --> B["🧹 Processing"]
+    B --> C["🤖 ML Prediction"]
+    C --> D["⚙️ Retrofit Simulation"]
+    D --> E["📊 Impact Analysis"]
+    E --> F["🏆 Ranking"]
+    F --> G["💻 Dashboard"]
