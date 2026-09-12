@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent
 MODEL_FILE = BASE_DIR / "comfort_tsv_model.joblib"
 
 # If the CSVs are kept in the same folder, these names work directly.
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
 
 EESL_FILE = PROJECT_ROOT / "data" / "processed" / "eesl_commercial_retrofits_clean.csv"
 
