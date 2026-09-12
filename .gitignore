@@ -1,3 +1,19 @@
+# Data
 data/raw/*.csv
 data/raw/*.zip
 !data/raw/.gitkeep
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
+*.egg-info/
+
+# Editor/OS
+.vscode/
+.DS_Store
+
+# Streamlit
+.streamlit/
