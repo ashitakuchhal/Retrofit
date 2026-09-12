@@ -8,7 +8,7 @@ RetrofitIQ is a data-driven decision-support system that analyzes building and H
 
 **🏆 Round 2 | 🚧 Development in Progress | VIT Chennai**
 
----
+----
 
 # 🎯 What Are We Building?
 
