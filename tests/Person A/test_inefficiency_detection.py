@@ -13,9 +13,10 @@ import numpy as np
 from pathlib import Path
 
 # Ensure src/ is importable
-SRC_DIR = Path(__file__).resolve().parent.parent / "src"
+SRC_DIR = Path(__file__).resolve().parent.parent.parent / "src" / "Person A"
 if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
+
 
 from inefficiency_detection import (
     detect_economizer_fault,
@@ -24,7 +25,6 @@ from inefficiency_detection import (
     detect_poor_zoning,
     detect_inefficiencies,
 )
-
 
 class TestInefficiencyDetection(unittest.TestCase):
 
@@ -58,11 +58,13 @@ class TestInefficiencyDetection(unittest.TestCase):
         }
         res = detect_inefficiencies(dummy_row)
         self.assertIsInstance(res, dict)
-        required_keys = ["poor_zoning", "ventilation_imbalance", "economizer_fault", "sensor_mismatch"]
+        required_keys = ["poor_zoning", "ventilation_imbalance",
+                         "economizer_fault", "sensor_mismatch"]
         for k in required_keys:
             self.assertIn(k, res)
             self.assertIsInstance(res[k], int)
-            self.assertTrue(0 <= res[k] <= 5, f"Score for {k} ({res[k]}) is outside 0-5")
+            self.assertTrue(
+                0 <= res[k] <= 5, f"Score for {k} ({res[k]}) is outside 0-5")
 
     def test_handpicked_stuck_open_row_11475(self):
         """
@@ -78,7 +80,8 @@ class TestInefficiencyDetection(unittest.TestCase):
 
         score, details = detect_economizer_fault(row, return_details=True)
         self.assertTrue(details["stuck_open"], "Detector must flag stuck open")
-        self.assertGreaterEqual(score, 4, "Severity score for stuck open warm air must be >= 4")
+        self.assertGreaterEqual(
+            score, 4, "Severity score for stuck open warm air must be >= 4")
 
         full_scores = detect_inefficiencies(row)
         self.assertGreaterEqual(full_scores["economizer_fault"], 4)
@@ -112,8 +115,10 @@ class TestInefficiencyDetection(unittest.TestCase):
         self.assertTrue(bool(row["fault_econ_stuck_closed"]))
 
         score, details = detect_economizer_fault(row, return_details=True)
-        self.assertTrue(details["stuck_closed"], "Detector must flag stuck closed")
-        self.assertGreaterEqual(score, 3, "Severity score for stuck closed must be >= 3")
+        self.assertTrue(details["stuck_closed"],
+                        "Detector must flag stuck closed")
+        self.assertGreaterEqual(
+            score, 3, "Severity score for stuck closed must be >= 3")
 
     def test_handpicked_sensor_mismatch_row_5550(self):
         """
@@ -129,7 +134,8 @@ class TestInefficiencyDetection(unittest.TestCase):
 
         score, details = detect_sensor_mismatch(row, return_details=True)
         self.assertGreaterEqual(details["abs_deviation_f"], 15.0)
-        self.assertGreaterEqual(score, 4, "Severity score for |dev| > 15°F must be >= 4")
+        self.assertGreaterEqual(
+            score, 4, "Severity score for |dev| > 15°F must be >= 4")
 
         full_scores = detect_inefficiencies(row)
         self.assertGreaterEqual(full_scores["sensor_mismatch"], 4)
@@ -147,8 +153,10 @@ class TestInefficiencyDetection(unittest.TestCase):
 
         econ_score = detect_economizer_fault(row)
         sensor_score = detect_sensor_mismatch(row)
-        self.assertEqual(econ_score, 0, "Normal row should have economizer_fault == 0")
-        self.assertLessEqual(sensor_score, 1, "Normal row should have sensor_mismatch <= 1")
+        self.assertEqual(
+            econ_score, 0, "Normal row should have economizer_fault == 0")
+        self.assertLessEqual(
+            sensor_score, 1, "Normal row should have sensor_mismatch <= 1")
 
     def test_testbed_poor_zoning(self):
         """TestBed has known high inter-zone temperature spread (mean 3.35°C, max 14.9°C)."""
@@ -156,7 +164,8 @@ class TestInefficiencyDetection(unittest.TestCase):
             self.skipTest("testbed dataset not found")
 
         score, details = detect_poor_zoning(self.testbed, return_details=True)
-        self.assertGreaterEqual(score, 3, "TestBedClean should register moderate-to-severe poor zoning (>= 3)")
+        self.assertGreaterEqual(
+            score, 3, "TestBedClean should register moderate-to-severe poor zoning (>= 3)")
         self.assertGreaterEqual(details["median_zone_spread_c"], 3.0)
         self.assertGreater(details["vav_energy_cv"], 0.5)
 

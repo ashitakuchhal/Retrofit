@@ -52,6 +52,10 @@ _person_c = _load_module(
     "person_c",
     PROJECT_ROOT / "src" / "person c" / "comfort and sustainability" / "comfort_sustainability.py",
 )
+_person_d_maintenance = _load_module(
+    "person_d_maintenance", PROJECT_ROOT / "src" / "Person D" / "maintenance.py"
+)
+maintenance_score = _person_d_maintenance.maintenance_score
 
 # Person B is done -- their package has internal relative imports
 # (cost_benefit.py does `from .energy_scoring import ...`), so rather than
@@ -64,7 +68,6 @@ if str(_PERSON_B_DIR) not in sys.path:
 
 from energy_scoring import energy_score  # noqa: E402
 from cost_benefit import cost_benefit_score  # noqa: E402
-from maintenance import maintenance_score  # noqa: E402
 
 detect_inefficiencies = _person_a.detect_inefficiencies
 comfort_score = _person_c.comfort_score

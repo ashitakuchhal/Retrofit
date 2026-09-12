@@ -62,6 +62,11 @@ with col1:
     building_age = st.number_input("Building Age (years)", min_value=0, value=15)
     baseline_hvac_type = st.text_input("Baseline HVAC Type", "Constant-speed Chillers + CAV AHUs")
     eui_level = st.selectbox("Energy Use Intensity", ["High", "Typical", "Low"])
+    n_floors = st.number_input("Number of Floors", min_value=1, value=4)
+    fan_type = st.selectbox("Fan Type", ["Constant Speed", "Variable Speed (VFD)"])
+    zoning_condition = st.selectbox("Zoning Condition", ["Poor", "Good"])
+    ventilation_condition = st.selectbox("Ventilation Condition", ["Excess Outdoor Air", "Normal", "Insufficient"])
+    controls = st.selectbox("Controls", ["Conventional", "Automated"])
 
 with col2:
     st.subheader("Detected Conditions")
@@ -85,8 +90,13 @@ building_features = {
     "building_type": building_type,
     "gross_floor_area_m2": floor_area,
     "building_age": building_age,
-    "baseline_hvac_type": baseline_hvac_type,
+    "hvac_type": baseline_hvac_type,      # renamed key to match what energy_scoring.py expects
     "eui_level": eui_level,
+    "n_floors": n_floors,
+    "fan_type": fan_type,
+    "zoning_condition": zoning_condition,
+    "ventilation_condition": ventilation_condition,
+    "controls": controls,
 }
 
 if st.button("Get Recommendations", type="primary"):
