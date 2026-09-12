@@ -9,12 +9,11 @@ BASE_DIR = Path(__file__).resolve().parent
 MODEL_FILE = BASE_DIR / "comfort_tsv_model.joblib"
 
 # If the CSVs are kept in the same folder, these names work directly.
-PROJECT_ROOT = Path(__file__).resolve().parents[3]
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 EESL_FILE = PROJECT_ROOT / "data" / "processed" / "eesl_commercial_retrofits_clean.csv"
 
-print("PROJECT ROOT:", PROJECT_ROOT)
-print("EESL FILE:", EESL_FILE)
+
 FEATURES = [
     "indoor_temp_c",
     "indoor_rh_pct",
@@ -67,27 +66,22 @@ def _score_from_quintile(value):
 
 
 def comfort_score(building, retrofit_option):
-    """Return a 1-5 comfort score using EESL retrofit-package evidence."""
+    """Return a 1-5 comfort score for the selected retrofit option."""
     if retrofit_option not in RETROFIT_COLUMNS:
         raise ValueError(f"Unknown retrofit option: {retrofit_option}")
 
-    if building.get("comfort_impact_score") is not None:
-        return float(np.clip(building["comfort_impact_score"], 1, 5))
-
-    return round(float(np.clip(
-        comfort_means[retrofit_option], 1, 5
-    )), 2)
+    return round(
+        float(np.clip(comfort_means[retrofit_option], 1, 5)),
+        2
+    )
 
 
 def sustainability_score(building, retrofit_option):
-    """Return a 1-5 sustainability score from avoided CO2."""
+    """Return a 1-5 sustainability score for the selected retrofit option."""
     if retrofit_option not in RETROFIT_COLUMNS:
         raise ValueError(f"Unknown retrofit option: {retrofit_option}")
 
-    value = building.get("avoided_co2_tons_yr")
-
-    if value is None:
-        value = co2_means[retrofit_option]
+    value = co2_means[retrofit_option]
 
     return _score_from_quintile(float(value))
 
@@ -130,10 +124,14 @@ if __name__ == "__main__":
     print("\nPerson C — Comfort + Sustainability")
     print("-----------------------------------")
 
+    indoor_temp = float(input("Enter indoor temperature (°C): "))
+    indoor_rh = float(input("Enter indoor RH (%): "))
+    air_velocity = float(input("Enter indoor air velocity (m/s): "))
+
     test_building = {
-        "indoor_temp_c": 28.0,
-        "indoor_rh_pct": 60.0,
-        "indoor_air_velocity_ms": 0.30
+        "indoor_temp_c": indoor_temp,
+        "indoor_rh_pct": indoor_rh,
+        "indoor_air_velocity_ms": air_velocity
     }
 
     print("\nComfort Support:")
