@@ -53,10 +53,17 @@ _person_c = _load_module(
     PROJECT_ROOT / "src" / "person c" / "comfort and sustainability" / "comfort_sustainability.py",
 )
 
-# Person B is in progress -- using the stub until their real module lands.
-# To swap in the real thing later, change this one import line to:
-#   from person_b_energy_cost import energy_score, cost_benefit_score
-from person_b_stub import energy_score, cost_benefit_score  # noqa: E402
+# Person B is done -- their package has internal relative imports
+# (cost_benefit.py does `from .energy_scoring import ...`), so rather than
+# importlib-loading each file separately (which breaks relative imports),
+# add their directory to sys.path and import it the same way their own
+# tests do (tests/Person B/test_energy_cost.py uses this exact pattern).
+_PERSON_B_DIR = PROJECT_ROOT / "src" / "Person B"
+if str(_PERSON_B_DIR) not in sys.path:
+    sys.path.insert(0, str(_PERSON_B_DIR))
+
+from energy_scoring import energy_score  # noqa: E402
+from cost_benefit import cost_benefit_score  # noqa: E402
 from maintenance import maintenance_score  # noqa: E402
 
 detect_inefficiencies = _person_a.detect_inefficiencies
@@ -106,7 +113,15 @@ def filter_catalog(inefficiency_flags: Dict[str, int]) -> list:
 
 
 def score_option(building_features: Dict[str, Any], option: str, weights: Dict[str, float]) -> Dict[str, Any]:
-    """Run all five axis scorers on one retrofit option and combine them."""
+    """Run all five axis scorers on one retrofit option and combine them.
+
+    `building_features` here is expected to already include Person A's
+    inefficiency flags merged in (see recommend_retrofits) -- Person B's
+    energy_scoring.py reads building.get("poor_zoning", 0),
+    building.get("ventilation_imbalance", 0), and
+    building.get("economizer_fault", 0) directly to adjust its estimate,
+    so those keys need to reach it.
+    """
     energy = energy_score(building_features, option)
     comfort = comfort_score(building_features, option)
     cost_benefit = cost_benefit_score(building_features, option)
@@ -173,7 +188,12 @@ def recommend_retrofits(
         filter_catalog(inefficiency_flags) if inefficiency_flags is not None else RETROFIT_CATALOG
     )
 
-    rows = [score_option(building_features, option, weights) for option in candidates]
+    # Merge A's flags into the feature dict -- Person B's energy_scoring
+    # reads poor_zoning/ventilation_imbalance/economizer_fault directly
+    # off the building dict (see score_option docstring).
+    scoring_features = {**building_features, **(inefficiency_flags or {})}
+
+    rows = [score_option(scoring_features, option, weights) for option in candidates]
     df = pd.DataFrame(rows).sort_values("Final Score", ascending=False).reset_index(drop=True)
     return df
 
